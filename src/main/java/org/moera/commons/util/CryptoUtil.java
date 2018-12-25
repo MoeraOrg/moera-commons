@@ -35,12 +35,12 @@ public class CryptoUtil {
         return rawKey;
     }
 
-    public static PublicKey toPrivateKey(byte[] rawKey) throws NoSuchAlgorithmException, InvalidKeySpecException {
+    public static PrivateKey toPrivateKey(byte[] rawKey) throws NoSuchAlgorithmException, InvalidKeySpecException {
         byte[] encodedKey = new byte[PKCS8_HEADER.length + rawKey.length];
         System.arraycopy(PKCS8_HEADER, 0, encodedKey, 0, PKCS8_HEADER.length);
         System.arraycopy(rawKey, 0, encodedKey, PKCS8_HEADER.length, rawKey.length);
         PKCS8EncodedKeySpec keySpec = new PKCS8EncodedKeySpec(encodedKey);
-        return KeyFactory.getInstance("EC").generatePublic(keySpec);
+        return KeyFactory.getInstance("EC").generatePrivate(keySpec);
     }
 
 }
