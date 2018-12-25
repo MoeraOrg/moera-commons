@@ -1,7 +1,9 @@
 package org.moera.commons.util;
 
 import java.sql.Timestamp;
+import java.time.Duration;
 import java.time.Instant;
+import java.time.temporal.ChronoUnit;
 import java.util.Base64;
 
 public class Util {
@@ -33,6 +35,36 @@ public class Util {
             l = (l << 8) | b;
         }
         return l;
+    }
+
+    public static Duration toDuration(String s) {
+        if (s == null || s.equals("")) {
+            return null;
+        }
+        ChronoUnit unit;
+        switch (s.charAt(s.length() - 1)) {
+            case 's':
+                unit = ChronoUnit.SECONDS;
+                break;
+            case 'm':
+                unit = ChronoUnit.MINUTES;
+                break;
+            case 'h':
+                unit = ChronoUnit.HOURS;
+                break;
+            case 'd':
+                unit = ChronoUnit.DAYS;
+                break;
+            default:
+                throw new DurationFormatException(s);
+        }
+        long amount;
+        try {
+            amount = Long.parseLong(s.substring(0, s.length() - 1));
+        } catch (NumberFormatException e) {
+            throw new DurationFormatException(s);
+        }
+        return Duration.of(amount, unit);
     }
 
     public static String dump(byte[] bytes) {
