@@ -1,9 +1,11 @@
 package org.moera.commons.util;
 
 import java.security.KeyFactory;
+import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.security.PrivateKey;
 import java.security.PublicKey;
+import java.security.SecureRandom;
 import java.security.spec.InvalidKeySpecException;
 import java.security.spec.PKCS8EncodedKeySpec;
 import java.security.spec.X509EncodedKeySpec;
@@ -41,6 +43,12 @@ public class CryptoUtil {
         System.arraycopy(rawKey, 0, encodedKey, PKCS8_HEADER.length, rawKey.length);
         PKCS8EncodedKeySpec keySpec = new PKCS8EncodedKeySpec(encodedKey);
         return KeyFactory.getInstance("EC").generatePrivate(keySpec);
+    }
+
+    public static String token() throws NoSuchAlgorithmException {
+        byte[] random = new byte[32];
+        SecureRandom.getInstanceStrong().nextBytes(random);
+        return Util.base64encode(MessageDigest.getInstance("SHA-256").digest(random));
     }
 
 }
