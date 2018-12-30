@@ -17,4 +17,6 @@ public interface NamingService {
             @JsonRpcParam("validFrom") Long validFrom,
             @JsonRpcParam("signature") String signature);
 
+    OperationStatusInfo getStatus(@JsonRpcParam("operationId") UUID operationId);
+
 }
