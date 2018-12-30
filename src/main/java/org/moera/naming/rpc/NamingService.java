@@ -1,12 +1,14 @@
 package org.moera.naming.rpc;
 
+import java.util.UUID;
+
 import com.googlecode.jsonrpc4j.JsonRpcParam;
 import com.googlecode.jsonrpc4j.JsonRpcService;
 
 @JsonRpcService("/moera-naming")
 public interface NamingService {
 
-    long put(
+    UUID put(
             @JsonRpcParam("name") String name,
             @JsonRpcParam("newGeneration") boolean newGeneration,
             @JsonRpcParam("updatingKey") String updatingKey,
