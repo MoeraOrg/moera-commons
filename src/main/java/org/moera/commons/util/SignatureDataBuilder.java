@@ -24,7 +24,9 @@ public class SignatureDataBuilder {
     }
 
     public void append(String str, int off, int len) throws IOException {
-        out.write(str.substring(off, off + len).getBytes(StandardCharsets.UTF_8));
+        if (str != null) {
+            out.write(str.substring(off, off + len).getBytes(StandardCharsets.UTF_8));
+        }
         out.write(0);
     }
 

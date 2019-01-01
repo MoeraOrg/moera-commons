@@ -19,4 +19,6 @@ public interface NamingService {
 
     OperationStatusInfo getStatus(@JsonRpcParam("operationId") UUID operationId);
 
+    RegisteredNameInfo getCurrent(@JsonRpcParam("name") String name);
+
 }
