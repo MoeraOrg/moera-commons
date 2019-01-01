@@ -78,4 +78,16 @@ public class Util {
         return buf.toString();
     }
 
+    public static boolean equals(byte[] array1, int offset1, byte[] array2, int offset2, int length) {
+        if (offset1 < 0 || offset2 < 0 || offset1 + length > array1.length || offset2 + length > array2.length) {
+            throw new IllegalArgumentException("Array indexes out of range");
+        }
+        for (int i = 0; i < length; i++) {
+            if (array1[offset1 + i] != array2[offset2 + i]) {
+                return false;
+            }
+        }
+        return true;
+    }
+
 }

@@ -3,6 +3,7 @@ package org.moera.commons.util;
 import java.security.KeyFactory;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.security.NoSuchProviderException;
 import java.security.PrivateKey;
 import java.security.PublicKey;
 import java.security.SecureRandom;
@@ -12,11 +13,14 @@ import java.security.spec.X509EncodedKeySpec;
 
 public class CryptoUtil {
 
-    private static final byte[] X509_HEADER = Util.base64decode("MFkwEwYHKoZIzj0CAQYIKoZIzj0DAQcDQgAE");
-    private static final byte[] PKCS8_HEADER = Util.base64decode("MEECAQAwEwYHKoZIzj0CAQYIKoZIzj0DAQcEJzAlAgEBBCA=");
+    private static final byte[] X509_HEADER = Util.base64decode("MFYwEAYHKoZIzj0CAQYFK4EEAAoDQgAE");
+    private static final byte[] PKCS8_HEADER = Util.base64decode("MIGNAgEAMBAGByqGSM49AgEGBSuBBAAKBHYwdAIBAQQg");
 
     public static byte[] toRawPublicKey(PublicKey publicKey) {
         byte[] encodedKey = publicKey.getEncoded();
+        if (!Util.equals(encodedKey, 0, X509_HEADER, 0, X509_HEADER.length)) {
+            throw new CryptoException("Non-standard X.509 header of the public key");
+        }
         byte[] rawKey = new byte[encodedKey.length - X509_HEADER.length];
         System.arraycopy(encodedKey, X509_HEADER.length, rawKey, 0, rawKey.length);
         return rawKey;
@@ -28,14 +32,17 @@ public class CryptoUtil {
         System.arraycopy(rawKey, 0, encodedKey, X509_HEADER.length, rawKey.length);
         X509EncodedKeySpec keySpec = new X509EncodedKeySpec(encodedKey);
         try {
-            return KeyFactory.getInstance("EC").generatePublic(keySpec);
-        } catch (InvalidKeySpecException | NoSuchAlgorithmException e) {
+            return KeyFactory.getInstance("EC", "BC").generatePublic(keySpec);
+        } catch (InvalidKeySpecException | NoSuchAlgorithmException | NoSuchProviderException e) {
             throw new CryptoException(e);
         }
     }
 
     public static byte[] toRawPrivateKey(PrivateKey privateKey) {
         byte[] encodedKey = privateKey.getEncoded();
+        if (!Util.equals(encodedKey, 0, PKCS8_HEADER, 0, PKCS8_HEADER.length)) {
+            throw new CryptoException("Non-standard PKCS#8 header of the private key");
+        }
         byte[] rawKey = new byte[encodedKey.length - PKCS8_HEADER.length];
         System.arraycopy(encodedKey, PKCS8_HEADER.length, rawKey, 0, rawKey.length);
         return rawKey;
@@ -47,8 +54,8 @@ public class CryptoUtil {
         System.arraycopy(rawKey, 0, encodedKey, PKCS8_HEADER.length, rawKey.length);
         PKCS8EncodedKeySpec keySpec = new PKCS8EncodedKeySpec(encodedKey);
         try {
-            return KeyFactory.getInstance("EC").generatePrivate(keySpec);
-        } catch (InvalidKeySpecException | NoSuchAlgorithmException e) {
+            return KeyFactory.getInstance("EC", "BC").generatePrivate(keySpec);
+        } catch (InvalidKeySpecException | NoSuchAlgorithmException | NoSuchProviderException e) {
             throw new CryptoException(e);
         }
     }
@@ -57,8 +64,8 @@ public class CryptoUtil {
         byte[] random = new byte[32];
         try {
             SecureRandom.getInstanceStrong().nextBytes(random);
-            return Util.base64encode(MessageDigest.getInstance("SHA-256").digest(random));
-        } catch (NoSuchAlgorithmException e) {
+            return Util.base64encode(MessageDigest.getInstance("SHA-256", "BC").digest(random));
+        } catch (NoSuchAlgorithmException | NoSuchProviderException e) {
             throw new CryptoException(e);
         }
     }
