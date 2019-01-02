@@ -11,11 +11,11 @@ public interface NamingService {
     UUID put(
             @JsonRpcParam("name") String name,
             @JsonRpcParam("newGeneration") boolean newGeneration,
-            @JsonRpcParam("updatingKey") String updatingKey,
+            @JsonRpcParam("updatingKey") byte[] updatingKey,
             @JsonRpcParam("nodeUri") String nodeUri,
-            @JsonRpcParam("signingKey") String signingKey,
+            @JsonRpcParam("signingKey") byte[] signingKey,
             @JsonRpcParam("validFrom") Long validFrom,
-            @JsonRpcParam("signature") String signature);
+            @JsonRpcParam("signature") byte[] signature);
 
     OperationStatusInfo getStatus(@JsonRpcParam("operationId") UUID operationId);
 
