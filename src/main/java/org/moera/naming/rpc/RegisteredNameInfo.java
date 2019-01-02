@@ -6,6 +6,7 @@ public class RegisteredNameInfo {
     private int generation;
     private String updatingKey;
     private String nodeUri;
+    private Long deadline;
     private String signingKey;
     private Long validFrom;
 
@@ -39,6 +40,14 @@ public class RegisteredNameInfo {
 
     public void setNodeUri(String nodeUri) {
         this.nodeUri = nodeUri;
+    }
+
+    public Long getDeadline() {
+        return deadline;
+    }
+
+    public void setDeadline(Long deadline) {
+        this.deadline = deadline;
     }
 
     public String getSigningKey() {
