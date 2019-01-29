@@ -4,6 +4,7 @@ public class RegisteredNameInfo {
 
     private String name;
     private int generation;
+    private boolean latest;
     private String updatingKey;
     private String nodeUri;
     private Long deadline;
@@ -24,6 +25,14 @@ public class RegisteredNameInfo {
 
     public void setGeneration(int generation) {
         this.generation = generation;
+    }
+
+    public boolean isLatest() {
+        return latest;
+    }
+
+    public void setLatest(boolean latest) {
+        this.latest = latest;
     }
 
     public String getUpdatingKey() {
