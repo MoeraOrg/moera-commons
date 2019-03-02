@@ -1,60 +1,76 @@
 package org.moera.commons.util;
 
+import static org.moera.naming.rpc.Rules.EC_CURVE;
+import static org.moera.naming.rpc.Rules.PRIVATE_KEY_LENGTH;
+import static org.moera.naming.rpc.Rules.PUBLIC_KEY_LENGTH;
+
+import java.math.BigInteger;
 import java.security.KeyFactory;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.security.NoSuchProviderException;
-import java.security.PrivateKey;
-import java.security.PublicKey;
 import java.security.SecureRandom;
+import java.security.interfaces.ECPrivateKey;
+import java.security.interfaces.ECPublicKey;
 import java.security.spec.InvalidKeySpecException;
-import java.security.spec.PKCS8EncodedKeySpec;
-import java.security.spec.X509EncodedKeySpec;
+
+import org.bouncycastle.jce.ECNamedCurveTable;
+import org.bouncycastle.jce.spec.ECParameterSpec;
+import org.bouncycastle.jce.spec.ECPrivateKeySpec;
+import org.bouncycastle.jce.spec.ECPublicKeySpec;
+import org.bouncycastle.math.ec.ECPoint;
 
 public class CryptoUtil {
 
-    private static final byte[] X509_HEADER = Util.base64decode("MFYwEAYHKoZIzj0CAQYFK4EEAAoDQgAE");
-    private static final byte[] PKCS8_HEADER = Util.base64decode("MIGNAgEAMBAGByqGSM49AgEGBSuBBAAKBHYwdAIBAQQg");
+    private static byte[] encodeUnsigned(BigInteger v, int len) {
+        byte[] r = v.toByteArray();
+        byte[] e = new byte[len];
+        int srcPos = r.length < len ? 0 : r.length - len;
+        int dstPos = r.length < len ? len - r.length : 0;
+        System.arraycopy(r, srcPos, e, dstPos, r.length - srcPos);
+        return e;
+    }
 
-    public static byte[] toRawPublicKey(PublicKey publicKey) {
-        byte[] encodedKey = publicKey.getEncoded();
-        if (!Util.equals(encodedKey, 0, X509_HEADER, 0, X509_HEADER.length)) {
-            throw new CryptoException("Non-standard X.509 header of the public key");
-        }
-        byte[] rawKey = new byte[encodedKey.length - X509_HEADER.length];
-        System.arraycopy(encodedKey, X509_HEADER.length, rawKey, 0, rawKey.length);
+    private static BigInteger decodeUnsigned(byte[] e) {
+        byte[] r = new byte[e.length + 1];
+        System.arraycopy(e, 0, r, r.length - e.length, e.length);
+        return new BigInteger(r);
+    }
+
+    public static byte[] toRawPublicKey(ECPublicKey publicKey) {
+        byte[] x = encodeUnsigned(publicKey.getW().getAffineX(), PUBLIC_KEY_LENGTH / 2);
+        byte[] y = encodeUnsigned(publicKey.getW().getAffineY(), PUBLIC_KEY_LENGTH / 2);
+        byte[] rawKey = new byte[x.length + y.length];
+        System.arraycopy(x, 0, rawKey, 0, x.length);
+        System.arraycopy(y, 0, rawKey, x.length, y.length);
         return rawKey;
     }
 
-    public static PublicKey toPublicKey(byte[] rawKey) {
-        byte[] encodedKey = new byte[X509_HEADER.length + rawKey.length];
-        System.arraycopy(X509_HEADER, 0, encodedKey, 0, X509_HEADER.length);
-        System.arraycopy(rawKey, 0, encodedKey, X509_HEADER.length, rawKey.length);
-        X509EncodedKeySpec keySpec = new X509EncodedKeySpec(encodedKey);
+    public static ECPublicKey toPublicKey(byte[] rawKey) {
+        byte[] x = new byte[PUBLIC_KEY_LENGTH / 2];
+        byte[] y = new byte[PUBLIC_KEY_LENGTH / 2];
+        System.arraycopy(rawKey, 0, x, 0, x.length);
+        System.arraycopy(rawKey, x.length, y, 0, y.length);
+        ECParameterSpec parameterSpec = ECNamedCurveTable.getParameterSpec(EC_CURVE);
+        ECPoint w = parameterSpec.getCurve().createPoint(decodeUnsigned(x), decodeUnsigned(y));
+        ECPublicKeySpec keySpec = new ECPublicKeySpec(w, parameterSpec);
+
         try {
-            return KeyFactory.getInstance("EC", "BC").generatePublic(keySpec);
+            return (ECPublicKey) KeyFactory.getInstance("EC", "BC").generatePublic(keySpec);
         } catch (InvalidKeySpecException | NoSuchAlgorithmException | NoSuchProviderException e) {
             throw new CryptoException(e);
         }
     }
 
-    public static byte[] toRawPrivateKey(PrivateKey privateKey) {
-        byte[] encodedKey = privateKey.getEncoded();
-        if (!Util.equals(encodedKey, 0, PKCS8_HEADER, 0, PKCS8_HEADER.length)) {
-            throw new CryptoException("Non-standard PKCS#8 header of the private key");
-        }
-        byte[] rawKey = new byte[encodedKey.length - PKCS8_HEADER.length];
-        System.arraycopy(encodedKey, PKCS8_HEADER.length, rawKey, 0, rawKey.length);
-        return rawKey;
+    public static byte[] toRawPrivateKey(ECPrivateKey privateKey) {
+        return encodeUnsigned(privateKey.getS(), PRIVATE_KEY_LENGTH);
     }
 
-    public static PrivateKey toPrivateKey(byte[] rawKey) {
-        byte[] encodedKey = new byte[PKCS8_HEADER.length + rawKey.length];
-        System.arraycopy(PKCS8_HEADER, 0, encodedKey, 0, PKCS8_HEADER.length);
-        System.arraycopy(rawKey, 0, encodedKey, PKCS8_HEADER.length, rawKey.length);
-        PKCS8EncodedKeySpec keySpec = new PKCS8EncodedKeySpec(encodedKey);
+    public static ECPrivateKey toPrivateKey(byte[] rawKey) {
+        ECParameterSpec parameterSpec = ECNamedCurveTable.getParameterSpec(EC_CURVE);
+        ECPrivateKeySpec keySpec = new ECPrivateKeySpec(decodeUnsigned(rawKey), parameterSpec);
         try {
-            return KeyFactory.getInstance("EC", "BC").generatePrivate(keySpec);
+            return (ECPrivateKey) KeyFactory.getInstance("EC", "BC").generatePrivate(keySpec);
         } catch (InvalidKeySpecException | NoSuchAlgorithmException | NoSuchProviderException e) {
             throw new CryptoException(e);
         }
