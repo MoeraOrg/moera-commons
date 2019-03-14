@@ -3,6 +3,7 @@ package org.moera.commons.util;
 import java.sql.Timestamp;
 import java.time.Duration;
 import java.time.Instant;
+import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
 import java.util.Base64;
 
@@ -10,6 +11,10 @@ public class Util {
 
     public static Timestamp now() {
         return Timestamp.from(Instant.now());
+    }
+
+    public static String formatTimestamp(long timestamp) {
+        return DateTimeFormatter.ISO_DATE_TIME.format(Instant.ofEpochSecond(timestamp));
     }
 
     public static String base64encode(byte[] bytes) {
