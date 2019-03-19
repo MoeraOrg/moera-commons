@@ -10,6 +10,7 @@ public class RegisteredNameInfo {
     private Long deadline;
     private String signingKey;
     private Long validFrom;
+    private byte[] digest;
 
     public String getName() {
         return name;
@@ -73,6 +74,14 @@ public class RegisteredNameInfo {
 
     public void setValidFrom(Long validFrom) {
         this.validFrom = validFrom;
+    }
+
+    public byte[] getDigest() {
+        return digest;
+    }
+
+    public void setDigest(byte[] digest) {
+        this.digest = digest;
     }
 
 }

@@ -15,6 +15,7 @@ public interface NamingService {
             @JsonRpcParam("nodeUri") String nodeUri,
             @JsonRpcParam("signingKey") byte[] signingKey,
             @JsonRpcParam("validFrom") Long validFrom,
+            @JsonRpcParam("previousDigest") byte[] previousDigest,
             @JsonRpcParam("signature") byte[] signature);
 
     OperationStatusInfo getStatus(@JsonRpcParam("operationId") UUID operationId);

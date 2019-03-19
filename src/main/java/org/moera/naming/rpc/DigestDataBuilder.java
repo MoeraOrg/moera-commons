@@ -4,11 +4,12 @@ import java.io.IOException;
 
 import org.moera.commons.util.SignatureDataBuilder;
 
-public class PutSignatureDataBuilder extends SignatureDataBuilder {
+public class DigestDataBuilder extends SignatureDataBuilder {
 
-    public PutSignatureDataBuilder(String name, byte[] updatingKey, String nodeUri, long deadline, byte[] signingKey,
-                                   long validFrom, byte[] previousDigest) throws IOException {
+    public DigestDataBuilder(String name, int generation, byte[] updatingKey, String nodeUri, long deadline,
+                             byte[] signingKey, long validFrom, byte[] previousDigest) throws IOException {
         append(name);
+        append(generation);
         append(updatingKey);
         append(nodeUri);
         append(deadline);

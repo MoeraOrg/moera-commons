@@ -3,18 +3,25 @@ package org.moera.commons.util;
 import java.sql.Timestamp;
 import java.time.Duration;
 import java.time.Instant;
+import java.time.LocalDateTime;
+import java.time.ZoneOffset;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
 import java.util.Base64;
 
+import org.moera.naming.rpc.Rules;
+
 public class Util {
+
+    public static final byte[] EMPTY_DIGEST = new byte[Rules.DIGEST_LENGTH];
 
     public static Timestamp now() {
         return Timestamp.from(Instant.now());
     }
 
     public static String formatTimestamp(long timestamp) {
-        return DateTimeFormatter.ISO_DATE_TIME.format(Instant.ofEpochSecond(timestamp));
+        return DateTimeFormatter.ISO_DATE_TIME.format(
+                LocalDateTime.ofInstant(Instant.ofEpochSecond(timestamp), ZoneOffset.UTC));
     }
 
     public static String base64encode(byte[] bytes) {
@@ -78,7 +85,7 @@ public class Util {
             if (buf.length() > 0) {
                 buf.append(' ');
             }
-            buf.append(String.format("%02X", b >= 0 ? b : -((int) b)));
+            buf.append(String.format("%02X", b >= 0 ? b : 256 + (int) b));
         }
         return buf.toString();
     }
