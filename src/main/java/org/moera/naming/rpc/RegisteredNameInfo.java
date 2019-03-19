@@ -5,10 +5,10 @@ public class RegisteredNameInfo {
     private String name;
     private int generation;
     private boolean latest;
-    private String updatingKey;
+    private byte[] updatingKey;
     private String nodeUri;
     private Long deadline;
-    private String signingKey;
+    private byte[] signingKey;
     private Long validFrom;
     private byte[] digest;
 
@@ -36,11 +36,11 @@ public class RegisteredNameInfo {
         this.latest = latest;
     }
 
-    public String getUpdatingKey() {
+    public byte[] getUpdatingKey() {
         return updatingKey;
     }
 
-    public void setUpdatingKey(String updatingKey) {
+    public void setUpdatingKey(byte[] updatingKey) {
         this.updatingKey = updatingKey;
     }
 
@@ -60,11 +60,11 @@ public class RegisteredNameInfo {
         this.deadline = deadline;
     }
 
-    public String getSigningKey() {
+    public byte[] getSigningKey() {
         return signingKey;
     }
 
-    public void setSigningKey(String signingKey) {
+    public void setSigningKey(byte[] signingKey) {
         this.signingKey = signingKey;
     }
 
