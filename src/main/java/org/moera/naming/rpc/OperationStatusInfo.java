@@ -10,6 +10,7 @@ public class OperationStatusInfo {
     private Timestamp added;
     private Timestamp completed;
     private String errorCode;
+    private String errorMessage;
     private Integer generation;
 
     public UUID getOperationId() {
@@ -50,6 +51,14 @@ public class OperationStatusInfo {
 
     public void setErrorCode(String errorCode) {
         this.errorCode = errorCode;
+    }
+
+    public String getErrorMessage() {
+        return errorMessage;
+    }
+
+    public void setErrorMessage(String errorMessage) {
+        this.errorMessage = errorMessage;
     }
 
     public Integer getGeneration() {
