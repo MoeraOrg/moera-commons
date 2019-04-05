@@ -24,4 +24,6 @@ public interface NamingService {
 
     RegisteredNameInfo getCurrentForLatest(@JsonRpcParam("name") String name);
 
+    boolean isFree(@JsonRpcParam("name") String name);
+
 }
