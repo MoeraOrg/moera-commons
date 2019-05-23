@@ -10,7 +10,7 @@ public interface NamingService {
 
     UUID put(
             @JsonRpcParam("name") String name,
-            @JsonRpcParam("newGeneration") boolean newGeneration,
+            @JsonRpcParam("generation") int generation,
             @JsonRpcParam("updatingKey") byte[] updatingKey,
             @JsonRpcParam("nodeUri") String nodeUri,
             @JsonRpcParam("signingKey") byte[] signingKey,
