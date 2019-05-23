@@ -11,7 +11,7 @@ public class OperationStatusInfo {
     private Timestamp completed;
     private String errorCode;
     private String errorMessage;
-    private Integer generation;
+    private int generation;
 
     public UUID getOperationId() {
         return operationId;
@@ -61,11 +61,11 @@ public class OperationStatusInfo {
         this.errorMessage = errorMessage;
     }
 
-    public Integer getGeneration() {
+    public int getGeneration() {
         return generation;
     }
 
-    public void setGeneration(Integer generation) {
+    public void setGeneration(int generation) {
         this.generation = generation;
     }
 
