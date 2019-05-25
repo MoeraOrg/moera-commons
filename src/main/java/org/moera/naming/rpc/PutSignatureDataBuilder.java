@@ -12,15 +12,9 @@ public class PutSignatureDataBuilder extends SignatureDataBuilder {
         append(updatingKey);
         append(nodeUri);
         append(deadline);
-        if (previousDigest != null) {
-            append(previousDigest);
-        } else {
-            append((byte) 0, Rules.DIGEST_LENGTH);
-        }
-        if (signingKey != null) {
-            append(signingKey);
-            append(validFrom);
-        }
+        append(previousDigest);
+        append(signingKey);
+        append(validFrom);
     }
 
 }
