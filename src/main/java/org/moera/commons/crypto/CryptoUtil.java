@@ -1,24 +1,31 @@
-package org.moera.commons.util;
+package org.moera.commons.crypto;
 
 import static org.moera.naming.rpc.Rules.EC_CURVE;
 import static org.moera.naming.rpc.Rules.PRIVATE_KEY_LENGTH;
 import static org.moera.naming.rpc.Rules.PUBLIC_KEY_LENGTH;
 
+import java.io.IOException;
 import java.math.BigInteger;
+import java.security.GeneralSecurityException;
 import java.security.KeyFactory;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.security.NoSuchProviderException;
 import java.security.SecureRandom;
+import java.security.Signature;
 import java.security.interfaces.ECPrivateKey;
 import java.security.interfaces.ECPublicKey;
 import java.security.spec.InvalidKeySpecException;
 
+import org.bouncycastle.crypto.Digest;
+import org.bouncycastle.jcajce.provider.util.DigestFactory;
 import org.bouncycastle.jce.ECNamedCurveTable;
 import org.bouncycastle.jce.spec.ECParameterSpec;
 import org.bouncycastle.jce.spec.ECPrivateKeySpec;
 import org.bouncycastle.jce.spec.ECPublicKeySpec;
 import org.bouncycastle.math.ec.ECPoint;
+import org.moera.commons.util.Util;
+import org.moera.naming.rpc.Rules;
 
 public class CryptoUtil {
 
@@ -84,6 +91,51 @@ public class CryptoUtil {
         } catch (NoSuchAlgorithmException | NoSuchProviderException e) {
             throw new CryptoException(e);
         }
+    }
+
+    public static byte[] fingerprint(Object obj) throws IOException {
+        SignatureDataBuilder buf = new SignatureDataBuilder();
+        buf.append(obj);
+        return buf.toBytes();
+    }
+
+    public static byte[] digest(Object obj) throws IOException {
+        byte[] content = fingerprint(obj);
+        Digest digest = DigestFactory.getDigest(Rules.DIGEST_ALGORITHM);
+        digest.update(content, 0, content.length);
+        byte[] result = new byte[digest.getDigestSize()];
+        digest.doFinal(result, 0);
+        return result;
+    }
+
+    public static byte[] sign(Object obj, byte[] privateKey)
+            throws IOException, GeneralSecurityException {
+
+        return sign(obj, toPrivateKey(privateKey));
+    }
+
+    public static byte[] sign(Object obj, ECPrivateKey privateKey)
+            throws IOException, GeneralSecurityException {
+
+        Signature signature = Signature.getInstance(Rules.SIGNATURE_ALGORITHM, "BC");
+        signature.initSign(privateKey, SecureRandom.getInstanceStrong());
+        signature.update(fingerprint(obj));
+        return signature.sign();
+    }
+
+    public static boolean verify(Object obj, byte[] signature, byte[] publicKey)
+            throws IOException, GeneralSecurityException {
+
+        return verify(obj, signature, toPublicKey(publicKey));
+    }
+
+    public static boolean verify(Object obj, byte[] signature, ECPublicKey publicKey)
+            throws IOException, GeneralSecurityException {
+
+        Signature sign = Signature.getInstance(Rules.SIGNATURE_ALGORITHM, "BC");
+        sign.initVerify(publicKey);
+        sign.update(fingerprint(obj));
+        return sign.verify(signature);
     }
 
 }

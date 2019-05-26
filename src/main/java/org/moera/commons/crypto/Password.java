@@ -1,9 +1,11 @@
-package org.moera.commons.util;
+package org.moera.commons.crypto;
 
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
+
+import org.moera.commons.util.Util;
 
 public class Password {
 

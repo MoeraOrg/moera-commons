@@ -1,18 +1,15 @@
-package org.moera.commons.util;
+package org.moera.commons.crypto;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.lang.reflect.Field;
 import java.nio.charset.StandardCharsets;
 
-import org.bouncycastle.crypto.Digest;
-import org.bouncycastle.jcajce.provider.util.DigestFactory;
-import org.moera.naming.rpc.Rules;
-
-public class SignatureDataBuilder {
+class SignatureDataBuilder {
 
     private ByteArrayOutputStream out = new ByteArrayOutputStream();
 
-    public SignatureDataBuilder() {
+    SignatureDataBuilder() {
     }
 
     public void appendNull() {
@@ -29,6 +26,10 @@ public class SignatureDataBuilder {
         out.write(bytes);
     }
 
+    public void append(boolean b) {
+        out.write((byte) (b ? 1 : 0));
+    }
+
     public void append(long l) {
         int len;
         if (l < 0xfc) {
@@ -36,16 +37,30 @@ public class SignatureDataBuilder {
         } else if (l <= 0xffff) {
             out.write((byte) 0xfc);
             len = 2;
-        } else if (l <= 0xffffff) {
+        } else if (l <= 0xffffffffL) {
             out.write((byte) 0xfd);
-            len = 3;
+            len = 4;
         } else {
             out.write((byte) 0xfe);
-            len = 4;
+            len = 8;
         }
         for (int i = 0; i < len; i++) {
             out.write((byte) (l & 0xff));
             l = l >> 8;
+        }
+    }
+
+    private void appendFingerprint(Fingerprint obj) throws IOException {
+        append(obj.getVersion());
+        try {
+            for (Field field : obj.getClass().getDeclaredFields()) {
+                Since since = field.getAnnotation(Since.class);
+                if (since == null || since.value() <= obj.getVersion()) {
+                    append(field.get(obj));
+                }
+            }
+        } catch (IllegalAccessException e) {
+            throw new SignatureDataException(obj.getClass(), "cannot read field", e);
         }
     }
 
@@ -54,7 +69,9 @@ public class SignatureDataBuilder {
             appendNull();
             return;
         }
-        if (obj instanceof Byte) {
+        if (obj instanceof Boolean) {
+            append(((Boolean) obj).booleanValue());
+        } else if (obj instanceof Byte) {
             append(((Byte) obj).longValue());
         } else if (obj instanceof Short) {
             append(((Short) obj).longValue());
@@ -69,23 +86,16 @@ public class SignatureDataBuilder {
             byte[] bytes = (byte[]) obj;
             append(bytes.length);
             out.write(bytes);
+        } else if (obj instanceof Fingerprint) {
+            appendFingerprint((Fingerprint) obj);
         } else {
-            throw new SignatureDataException(obj.getClass());
+            throw new SignatureDataException(obj.getClass(), "class is not primitive and not derived from Fingerprint");
         }
     }
 
     public byte[] toBytes() throws IOException {
         out.close();
         return out.toByteArray();
-    }
-
-    public byte[] getDigest() throws IOException {
-        Digest digest = DigestFactory.getDigest(Rules.DIGEST_ALGORITHM);
-        byte[] content = toBytes();
-        digest.update(content, 0, content.length);
-        byte[] result = new byte[digest.getDigestSize()];
-        digest.doFinal(result, 0);
-        return result;
     }
 
 }

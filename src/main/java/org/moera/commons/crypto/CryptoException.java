@@ -1,4 +1,4 @@
-package org.moera.commons.util;
+package org.moera.commons.crypto;
 
 public class CryptoException extends RuntimeException {
 
