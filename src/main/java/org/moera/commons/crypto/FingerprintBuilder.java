@@ -89,7 +89,7 @@ class FingerprintBuilder {
         } else if (obj instanceof Fingerprint) {
             appendFingerprint((Fingerprint) obj);
         } else {
-            throw new FingerprintException(obj.getClass(), "class is not primitive and not derived from Fingerprint");
+            throw new FingerprintException(obj.getClass(), "class is not a primitive and not derived from Fingerprint");
         }
     }
 
