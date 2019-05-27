@@ -94,7 +94,7 @@ public class CryptoUtil {
     }
 
     public static byte[] fingerprint(Object obj) throws IOException {
-        SignatureDataBuilder buf = new SignatureDataBuilder();
+        FingerprintBuilder buf = new FingerprintBuilder();
         buf.append(obj);
         return buf.toBytes();
     }

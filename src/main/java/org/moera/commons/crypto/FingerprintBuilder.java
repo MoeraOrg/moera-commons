@@ -5,11 +5,11 @@ import java.io.IOException;
 import java.lang.reflect.Field;
 import java.nio.charset.StandardCharsets;
 
-class SignatureDataBuilder {
+class FingerprintBuilder {
 
     private ByteArrayOutputStream out = new ByteArrayOutputStream();
 
-    SignatureDataBuilder() {
+    FingerprintBuilder() {
     }
 
     public void appendNull() {
@@ -60,7 +60,7 @@ class SignatureDataBuilder {
                 }
             }
         } catch (IllegalAccessException e) {
-            throw new SignatureDataException(obj.getClass(), "cannot read field", e);
+            throw new FingerprintException(obj.getClass(), "cannot read field", e);
         }
     }
 
@@ -89,7 +89,7 @@ class SignatureDataBuilder {
         } else if (obj instanceof Fingerprint) {
             appendFingerprint((Fingerprint) obj);
         } else {
-            throw new SignatureDataException(obj.getClass(), "class is not primitive and not derived from Fingerprint");
+            throw new FingerprintException(obj.getClass(), "class is not primitive and not derived from Fingerprint");
         }
     }
 

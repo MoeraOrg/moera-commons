@@ -1,12 +1,12 @@
 package org.moera.commons.crypto;
 
-public class SignatureDataException extends RuntimeException {
+public class FingerprintException extends RuntimeException {
 
-    public SignatureDataException(Class<?> klass, String reason) {
+    public FingerprintException(Class<?> klass, String reason) {
         super(getMessage(klass, reason));
     }
 
-    public SignatureDataException(Class<?> klass, String reason, Throwable cause) {
+    public FingerprintException(Class<?> klass, String reason, Throwable cause) {
         super(getMessage(klass, reason), cause);
     }
 
