@@ -7,7 +7,7 @@ public class RegisteredNameInfo {
     private boolean latest;
     private byte[] updatingKey;
     private String nodeUri;
-    private Long deadline;
+    private long deadline;
     private byte[] signingKey;
     private Long validFrom;
     private byte[] digest;
@@ -52,11 +52,11 @@ public class RegisteredNameInfo {
         this.nodeUri = nodeUri;
     }
 
-    public Long getDeadline() {
+    public long getDeadline() {
         return deadline;
     }
 
-    public void setDeadline(Long deadline) {
+    public void setDeadline(long deadline) {
         this.deadline = deadline;
     }
 
