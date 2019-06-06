@@ -102,4 +102,8 @@ public class Util {
         return true;
     }
 
+    public static int random(int min, int max) {
+        return (int) (Math.random() * (max - min)) + min;
+    }
+
 }
