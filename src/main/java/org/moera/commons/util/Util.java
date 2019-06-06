@@ -19,6 +19,14 @@ public class Util {
         return Timestamp.from(Instant.now());
     }
 
+    public static Long toEpochSecond(Timestamp timestamp) {
+        return timestamp != null ? timestamp.getTime() / 1000 : null;
+    }
+
+    public static Timestamp toTimestamp(Long epochSecond) {
+        return epochSecond != null ? Timestamp.from(Instant.ofEpochSecond(epochSecond)) : null;
+    }
+
     public static String formatTimestamp(long timestamp) {
         return DateTimeFormatter.ISO_DATE_TIME.format(
                 LocalDateTime.ofInstant(Instant.ofEpochSecond(timestamp), ZoneOffset.UTC));
