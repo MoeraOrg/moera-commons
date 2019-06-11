@@ -86,6 +86,8 @@ class FingerprintBuilder {
             byte[] bytes = (byte[]) obj;
             append(bytes.length);
             out.write(bytes);
+        } else if (obj instanceof Digest) {
+            append(((Digest) obj).getDigest());
         } else if (obj instanceof Fingerprint) {
             appendFingerprint((Fingerprint) obj);
         } else {
