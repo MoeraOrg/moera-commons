@@ -5,7 +5,12 @@ import java.util.UUID;
 public class LogUtil {
 
     public static String format(String value) {
-        return value != null ? String.format("'%s'", value) : "null";
+        return value != null ? String.format("'%s'", escape(value)) : "null";
+    }
+
+    private static String escape(String value) {
+        return value.replace("\n", "\\n")
+                .replace("\r", "\\r");
     }
 
     public static String format(String value, int maxLength) {
