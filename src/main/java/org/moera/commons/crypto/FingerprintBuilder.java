@@ -12,25 +12,29 @@ class FingerprintBuilder {
     FingerprintBuilder() {
     }
 
-    public void appendNull() {
+    private void appendNull() {
         out.write((byte) 0xff);
     }
 
-    public void append(String str, int off, int len) throws IOException {
+    private void append(String str, int off, int len) {
         if (str == null) {
             appendNull();
             return;
         }
         byte[] bytes = str.substring(off, off + len).getBytes(StandardCharsets.UTF_8);
         append(bytes.length);
-        out.write(bytes);
+        try {
+            out.write(bytes);
+        } catch (IOException e) {
+            throw new CryptoException(e);
+        }
     }
 
-    public void append(boolean b) {
+    private void append(boolean b) {
         out.write((byte) (b ? 1 : 0));
     }
 
-    public void append(long l) {
+    private void append(long l) {
         int len;
         if (l < 0xfc) {
             len = 1;
@@ -50,7 +54,16 @@ class FingerprintBuilder {
         }
     }
 
-    private void appendFingerprint(Fingerprint obj) throws IOException {
+    private void append(byte[] bytes) {
+        append(bytes.length);
+        try {
+            out.write(bytes);
+        } catch (IOException e) {
+            throw new CryptoException(e);
+        }
+    }
+
+    private void appendFingerprint(Fingerprint obj) {
         append(obj.getVersion());
         try {
             for (Field field : obj.getClass().getDeclaredFields()) {
@@ -64,7 +77,7 @@ class FingerprintBuilder {
         }
     }
 
-    public void append(Object obj) throws IOException {
+    public void append(Object obj) {
         if (obj == null) {
             appendNull();
             return;
@@ -83,9 +96,7 @@ class FingerprintBuilder {
             String str = (String) obj;
             append(str, 0, str.length());
         } else if (obj instanceof byte[]) {
-            byte[] bytes = (byte[]) obj;
-            append(bytes.length);
-            out.write(bytes);
+            append((byte[]) obj);
         } else if (obj instanceof Digest) {
             append(((Digest) obj).getDigest());
         } else if (obj instanceof Fingerprint) {
@@ -95,8 +106,12 @@ class FingerprintBuilder {
         }
     }
 
-    public byte[] toBytes() throws IOException {
-        out.close();
+    public byte[] toBytes() {
+        try {
+            out.close();
+        } catch (IOException e) {
+            throw new CryptoException(e);
+        }
         return out.toByteArray();
     }
 

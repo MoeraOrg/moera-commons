@@ -1,7 +1,5 @@
 package org.moera.commons.crypto;
 
-import java.io.IOException;
-
 public class Digest<T> {
 
     private T value;
@@ -19,7 +17,7 @@ public class Digest<T> {
         digest = null;
     }
 
-    public byte[] getDigest() throws IOException {
+    public byte[] getDigest() {
         if (digest == null) {
             digest = CryptoUtil.digest(value);
         }
