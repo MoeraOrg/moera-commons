@@ -8,6 +8,14 @@ public class LogUtil {
         return value != null ? String.format("'%s'", escape(value)) : "null";
     }
 
+    public static String format(Integer value) {
+        return value != null ? Integer.toString(value) : "null";
+    }
+
+    public static String format(Long value) {
+        return value != null ? Long.toString(value) : "null";
+    }
+
     private static String escape(String value) {
         return value.replace("\n", "\\n")
                 .replace("\r", "\\r");
