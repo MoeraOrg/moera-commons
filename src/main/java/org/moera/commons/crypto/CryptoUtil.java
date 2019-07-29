@@ -12,6 +12,7 @@ import java.security.NoSuchAlgorithmException;
 import java.security.NoSuchProviderException;
 import java.security.SecureRandom;
 import java.security.Signature;
+import java.security.SignatureException;
 import java.security.interfaces.ECPrivateKey;
 import java.security.interfaces.ECPublicKey;
 import java.security.spec.InvalidKeySpecException;
@@ -132,6 +133,8 @@ public class CryptoUtil {
             sign.initVerify(publicKey);
             sign.update(fingerprint(obj));
             return sign.verify(signature);
+        } catch (SignatureException e) {
+            return false;
         } catch (GeneralSecurityException e) {
             throw new CryptoException(e);
         }
