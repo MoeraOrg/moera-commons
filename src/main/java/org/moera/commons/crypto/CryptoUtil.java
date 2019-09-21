@@ -86,7 +86,7 @@ public class CryptoUtil {
     public static String token() {
         byte[] random = new byte[32];
         try {
-            SecureRandom.getInstanceStrong().nextBytes(random);
+            new SecureRandom().nextBytes(random);
             return Util.base64encode(MessageDigest.getInstance("SHA-256", "BC").digest(random));
         } catch (NoSuchAlgorithmException | NoSuchProviderException e) {
             throw new CryptoException(e);
@@ -115,7 +115,7 @@ public class CryptoUtil {
     public static byte[] sign(Object obj, ECPrivateKey privateKey) {
         try {
             Signature signature = Signature.getInstance(Rules.SIGNATURE_ALGORITHM, "BC");
-            signature.initSign(privateKey, SecureRandom.getInstanceStrong());
+            signature.initSign(privateKey, new SecureRandom());
             signature.update(fingerprint(obj));
             return signature.sign();
         } catch (GeneralSecurityException e) {

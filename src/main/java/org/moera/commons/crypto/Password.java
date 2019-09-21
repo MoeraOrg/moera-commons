@@ -11,11 +11,7 @@ public class Password {
 
     public static String hash(String password) {
         byte[] salt = new byte[Long.BYTES];
-        try {
-            SecureRandom.getInstanceStrong().nextBytes(salt);
-        } catch (NoSuchAlgorithmException e) {
-            throw new CryptoException(e);
-        }
+        new SecureRandom().nextBytes(salt);
         return hash(password, salt);
     }
 
