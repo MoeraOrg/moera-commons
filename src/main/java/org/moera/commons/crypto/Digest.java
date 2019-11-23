@@ -24,4 +24,8 @@ public class Digest<T> {
         return digest;
     }
 
+    public void setDigest(byte[] digest) {
+        this.digest = digest;
+    }
+
 }
