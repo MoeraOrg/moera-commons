@@ -24,6 +24,11 @@ public interface NamingService {
 
     RegisteredNameInfo getCurrentForLatest(@JsonRpcParam("name") String name);
 
+    RegisteredNameInfo getPast(@JsonRpcParam("name") String name, @JsonRpcParam("generation") int generation,
+                               @JsonRpcParam("at") long at);
+
+    RegisteredNameInfo getPastForLatest(@JsonRpcParam("name") String name, @JsonRpcParam("at") long at);
+
     boolean isFree(@JsonRpcParam("name") String name);
 
 }
