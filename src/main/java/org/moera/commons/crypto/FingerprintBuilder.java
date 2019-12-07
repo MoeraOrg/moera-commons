@@ -3,6 +3,7 @@ package org.moera.commons.crypto;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.lang.reflect.Field;
+import java.lang.reflect.Modifier;
 import java.nio.charset.StandardCharsets;
 
 class FingerprintBuilder {
@@ -67,6 +68,9 @@ class FingerprintBuilder {
         append(obj.getVersion());
         try {
             for (Field field : obj.getClass().getDeclaredFields()) {
+                if (Modifier.isStatic(field.getModifiers())) {
+                    continue;
+                }
                 Since since = field.getAnnotation(Since.class);
                 if (since == null || since.value() <= obj.getVersion()) {
                     append(field.get(obj));
