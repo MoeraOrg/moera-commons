@@ -1,28 +1,29 @@
 package org.moera.commons.crypto;
 
 import java.io.ByteArrayOutputStream;
+import java.io.Closeable;
 import java.io.IOException;
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
 import java.nio.charset.StandardCharsets;
 
-class FingerprintBuilder {
+class FingerprintWriter implements Closeable {
 
     private ByteArrayOutputStream out = new ByteArrayOutputStream();
 
-    FingerprintBuilder() {
+    FingerprintWriter() {
     }
 
     private void appendNull() {
         out.write((byte) 0xff);
     }
 
-    private void append(String str, int off, int len) {
+    private void append(String str) {
         if (str == null) {
             appendNull();
             return;
         }
-        byte[] bytes = str.substring(off, off + len).getBytes(StandardCharsets.UTF_8);
+        byte[] bytes = str.getBytes(StandardCharsets.UTF_8);
         append(bytes.length);
         try {
             out.write(bytes);
@@ -97,12 +98,11 @@ class FingerprintBuilder {
         } else if (obj instanceof Long) {
             append(((Long) obj).longValue());
         } else if (obj instanceof String) {
-            String str = (String) obj;
-            append(str, 0, str.length());
+            append((String) obj);
         } else if (obj instanceof byte[]) {
             append((byte[]) obj);
         } else if (obj instanceof Digest) {
-            append(((Digest) obj).getDigest());
+            append(((Digest<?>) obj).getDigest());
         } else if (obj instanceof Fingerprint) {
             appendFingerprint((Fingerprint) obj);
         } else {
@@ -110,12 +110,16 @@ class FingerprintBuilder {
         }
     }
 
-    public byte[] toBytes() {
+    @Override
+    public void close() {
         try {
             out.close();
         } catch (IOException e) {
             throw new CryptoException(e);
         }
+    }
+
+    public byte[] toBytes() {
         return out.toByteArray();
     }
 

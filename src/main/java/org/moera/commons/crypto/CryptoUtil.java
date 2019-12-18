@@ -16,6 +16,7 @@ import java.security.SignatureException;
 import java.security.interfaces.ECPrivateKey;
 import java.security.interfaces.ECPublicKey;
 import java.security.spec.InvalidKeySpecException;
+import java.util.function.Function;
 
 import org.bouncycastle.crypto.Digest;
 import org.bouncycastle.jcajce.provider.util.DigestFactory;
@@ -94,9 +95,10 @@ public class CryptoUtil {
     }
 
     public static byte[] fingerprint(Object obj) {
-        FingerprintBuilder buf = new FingerprintBuilder();
-        buf.append(obj);
-        return buf.toBytes();
+        try (FingerprintWriter writer = new FingerprintWriter()) {
+            writer.append(obj);
+            return writer.toBytes();
+        }
     }
 
     public static byte[] digest(Object obj) {
@@ -137,6 +139,18 @@ public class CryptoUtil {
             return false;
         } catch (GeneralSecurityException e) {
             throw new CryptoException(e);
+        }
+    }
+
+    public static Object restore(byte[] bytes, Class<?> type) {
+        try (FingerprintReader reader = new FingerprintReader(bytes)) {
+            return reader.read(type);
+        }
+    }
+
+    public static Fingerprint restore(byte[] bytes, Function<Integer, Fingerprint> creator) {
+        try (FingerprintReader reader = new FingerprintReader(bytes)) {
+            return reader.read(creator);
         }
     }
 
