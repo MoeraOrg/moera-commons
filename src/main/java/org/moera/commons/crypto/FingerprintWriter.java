@@ -5,6 +5,7 @@ import java.io.Closeable;
 import java.io.IOException;
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
+import java.net.InetAddress;
 import java.nio.charset.StandardCharsets;
 
 class FingerprintWriter implements Closeable {
@@ -101,6 +102,8 @@ class FingerprintWriter implements Closeable {
             append((String) obj);
         } else if (obj instanceof byte[]) {
             append((byte[]) obj);
+        } else if (obj instanceof InetAddress) {
+            append(((InetAddress) obj).getAddress());
         } else if (obj instanceof Digest) {
             append(((Digest<?>) obj).getDigest());
         } else if (obj instanceof Fingerprint) {

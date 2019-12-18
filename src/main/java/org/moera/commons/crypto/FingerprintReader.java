@@ -5,6 +5,8 @@ import java.io.Closeable;
 import java.io.IOException;
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
+import java.net.InetAddress;
+import java.net.UnknownHostException;
 import java.nio.charset.StandardCharsets;
 import java.util.function.Function;
 
@@ -122,6 +124,13 @@ public class FingerprintReader implements Closeable {
             return readString();
         } else if (type.equals(byte[].class)) {
             return readBytes();
+        } else if (InetAddress.class.isAssignableFrom(type)) {
+            try {
+                byte[] bytes = readBytes();
+                return bytes != null ? InetAddress.getByAddress(bytes) : null;
+            } catch (UnknownHostException e) {
+                throw new FingerprintException(type, "incorrect inet address", e);
+            }
         } else if (type.equals(Digest.class)) {
             return readDigest();
         } else if (Fingerprint.class.isAssignableFrom(type)) {
@@ -129,7 +138,7 @@ public class FingerprintReader implements Closeable {
                 try {
                     return (Fingerprint) type.newInstance();
                 } catch (Exception e) {
-                    throw new FingerprintException(type, "cannot instantiate");
+                    throw new FingerprintException(type, "cannot instantiate", e);
                 }
             });
         } else {
