@@ -142,15 +142,22 @@ public class CryptoUtil {
         }
     }
 
-    public static Object restore(byte[] bytes, Class<?> type) {
+    @SuppressWarnings("unchecked")
+    public static <T> RestoredObject<T> restore(byte[] bytes, Class<T> type) {
         try (FingerprintReader reader = new FingerprintReader(bytes)) {
-            return reader.read(type);
+            RestoredObject<T> ro = new RestoredObject<>();
+            ro.setObject((T) reader.read(type));
+            ro.setAvailable(reader.available());
+            return ro;
         }
     }
 
-    public static Fingerprint restore(byte[] bytes, Function<Integer, Fingerprint> creator) {
+    public static <T extends Fingerprint> RestoredObject<T> restore(byte[] bytes, Function<Short, T> creator) {
         try (FingerprintReader reader = new FingerprintReader(bytes)) {
-            return reader.read(creator);
+            RestoredObject<T> ro = new RestoredObject<>();
+            ro.setObject(reader.read(creator));
+            ro.setAvailable(reader.available());
+            return ro;
         }
     }
 

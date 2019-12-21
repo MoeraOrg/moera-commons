@@ -1,14 +1,13 @@
 package org.moera.commons.crypto;
 
 import java.io.ByteArrayOutputStream;
-import java.io.Closeable;
 import java.io.IOException;
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
 import java.net.InetAddress;
 import java.nio.charset.StandardCharsets;
 
-class FingerprintWriter implements Closeable {
+class FingerprintWriter implements AutoCloseable {
 
     private ByteArrayOutputStream out = new ByteArrayOutputStream();
 

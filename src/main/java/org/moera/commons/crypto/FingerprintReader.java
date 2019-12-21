@@ -1,7 +1,6 @@
 package org.moera.commons.crypto;
 
 import java.io.ByteArrayInputStream;
-import java.io.Closeable;
 import java.io.IOException;
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
@@ -10,7 +9,7 @@ import java.net.UnknownHostException;
 import java.nio.charset.StandardCharsets;
 import java.util.function.Function;
 
-public class FingerprintReader implements Closeable {
+public class FingerprintReader implements AutoCloseable {
 
     private ByteArrayInputStream in;
 
@@ -46,8 +45,10 @@ public class FingerprintReader implements Closeable {
                 return (long) lower;
         }
         long value = 0;
+        int shift = 0;
         for (int i = 0; i < len; i++) {
-            value = (value << 8) | in.read();
+            value |= in.read() << shift;
+            shift += 8;
         }
         return value;
     }
@@ -146,13 +147,16 @@ public class FingerprintReader implements Closeable {
         }
     }
 
-    public Fingerprint read(Function<Integer, Fingerprint> creator) {
+    public <T extends Fingerprint> T read(Function<Short, T> creator) {
         Long version = readNumber();
         if (version == null) {
             return null;
         }
 
-        Fingerprint obj = creator.apply(version.intValue());
+        T obj = creator.apply(version.shortValue());
+        if (obj == null) {
+            throw new CryptoException("cannot create fingerprint");
+        }
         if (obj.getVersion() < version) {
             throw new FingerprintException(obj.getClass(), "newer fingerprint version is required");
         }
@@ -170,6 +174,10 @@ public class FingerprintReader implements Closeable {
             throw new FingerprintException(obj.getClass(), "cannot read field", e);
         }
         return obj;
+    }
+
+    public int available() {
+        return in.available();
     }
 
     @Override
