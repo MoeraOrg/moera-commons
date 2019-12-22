@@ -4,6 +4,8 @@ import static org.moera.naming.rpc.Rules.EC_CURVE;
 import static org.moera.naming.rpc.Rules.PRIVATE_KEY_LENGTH;
 import static org.moera.naming.rpc.Rules.PUBLIC_KEY_LENGTH;
 
+import java.lang.reflect.Constructor;
+import java.lang.reflect.InvocationTargetException;
 import java.math.BigInteger;
 import java.security.GeneralSecurityException;
 import java.security.KeyFactory;
@@ -139,6 +141,21 @@ public class CryptoUtil {
             return false;
         } catch (GeneralSecurityException e) {
             throw new CryptoException(e);
+        }
+    }
+
+    public static boolean verify(byte[] signature, byte[] publicKey, Constructor<?> constructor, Object... args) {
+        return verify(signature, toPublicKey(publicKey), constructor, args);
+    }
+
+    public static boolean verify(byte[] signature, ECPublicKey publicKey, Constructor<?> constructor, Object... args) {
+        if (constructor == null) {
+            return false;
+        }
+        try {
+            return CryptoUtil.verify(constructor.newInstance(args), signature, publicKey);
+        } catch (InstantiationException | IllegalAccessException | InvocationTargetException e) {
+            return false;
         }
     }
 
