@@ -16,6 +16,10 @@ public class LogUtil {
         return value != null ? Long.toString(value) : "null";
     }
 
+    public static String format(Boolean value) {
+        return value != null ? Boolean.toString(value) : "null";
+    }
+
     private static String escape(String value) {
         return value.replace("\n", "\\n")
                 .replace("\r", "\\r");
