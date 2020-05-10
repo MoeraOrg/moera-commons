@@ -6,6 +6,8 @@ Java.
 
 Read more about Moera at https://moera.org
 
+Bugs and feature requests: https://github.com/MoeraOrg/moera-issues/issues
+
 To build and install, run the command:
 
 ```
