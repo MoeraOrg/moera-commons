@@ -5,13 +5,13 @@
 
 	<groupId>org.moera</groupId>
 	<artifactId>moera-commons</artifactId>
-	<version>0.4.0</version>
+	<version>0.5.0</version>
 	<name>moera-commons</name>
 	<description>Moera common classes</description>
 
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-		<java.version>1.8</java.version>
+		<java.version>11</java.version>
 	</properties>
 
 	<dependencies>
@@ -32,12 +32,13 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-compiler-plugin</artifactId>
+				<version>3.8.1</version>
 				<configuration>
 					<compilerArgs>
 						<arg>-parameters</arg>
 					</compilerArgs>
-					<source>1.8</source>
-					<target>1.8</target>
+					<source>11</source>
+					<target>11</target>
 				</configuration>
 			</plugin>
 			<plugin>
