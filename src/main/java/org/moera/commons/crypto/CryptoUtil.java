@@ -112,6 +112,17 @@ public class CryptoUtil {
         return result;
     }
 
+    public static byte[] digest(Constructor<?> constructor, Object... args) {
+        if (constructor == null) {
+            return null;
+        }
+        try {
+            return CryptoUtil.digest(constructor.newInstance(args));
+        } catch (InstantiationException | IllegalAccessException | InvocationTargetException e) {
+            return null;
+        }
+    }
+
     public static byte[] sign(Object obj, byte[] privateKey) {
         return sign(obj, toPrivateKey(privateKey));
     }
