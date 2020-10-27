@@ -27,10 +27,15 @@ import org.bouncycastle.jce.spec.ECParameterSpec;
 import org.bouncycastle.jce.spec.ECPrivateKeySpec;
 import org.bouncycastle.jce.spec.ECPublicKeySpec;
 import org.bouncycastle.math.ec.ECPoint;
+import org.moera.commons.util.LogUtil;
 import org.moera.commons.util.Util;
 import org.moera.naming.rpc.Rules;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class CryptoUtil {
+
+    private static Logger log = LoggerFactory.getLogger(CryptoUtil.class);
 
     private static byte[] encodeUnsigned(BigInteger v, int len) {
         byte[] r = v.toByteArray();
@@ -109,6 +114,7 @@ public class CryptoUtil {
         digest.update(content, 0, content.length);
         byte[] result = new byte[digest.getDigestSize()];
         digest.doFinal(result, 0);
+        log.debug("Digest: " + LogUtil.format(result));
         return result;
     }
 
@@ -132,7 +138,9 @@ public class CryptoUtil {
             Signature signature = Signature.getInstance(Rules.SIGNATURE_ALGORITHM, "BC");
             signature.initSign(privateKey, new SecureRandom());
             signature.update(fingerprint(obj));
-            return signature.sign();
+            byte[] result = signature.sign();
+            log.debug("Signature: " + LogUtil.format(result));
+            return result;
         } catch (GeneralSecurityException e) {
             throw new CryptoException(e);
         }
@@ -147,8 +155,12 @@ public class CryptoUtil {
             Signature sign = Signature.getInstance(Rules.SIGNATURE_ALGORITHM, "BC");
             sign.initVerify(publicKey);
             sign.update(fingerprint(obj));
-            return sign.verify(signature);
+            log.debug("Verifying signature: " + LogUtil.format(signature));
+            boolean correct = sign.verify(signature);
+            log.debug("Signature is {}", correct ? "correct" : "incorrect");
+            return correct;
         } catch (SignatureException e) {
+            log.debug("Signature is incorrect: " + e.getMessage());
             return false;
         } catch (GeneralSecurityException e) {
             throw new CryptoException(e);

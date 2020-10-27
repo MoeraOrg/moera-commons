@@ -7,7 +7,13 @@ import java.lang.reflect.Modifier;
 import java.net.InetAddress;
 import java.nio.charset.StandardCharsets;
 
+import org.moera.commons.util.LogUtil;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 class FingerprintWriter implements AutoCloseable {
+
+    private static Logger log = LoggerFactory.getLogger(FingerprintWriter.class);
 
     private ByteArrayOutputStream out = new ByteArrayOutputStream();
 
@@ -15,6 +21,7 @@ class FingerprintWriter implements AutoCloseable {
     }
 
     private void appendNull() {
+        log.debug("value: null");
         out.write((byte) 0xff);
     }
 
@@ -24,6 +31,9 @@ class FingerprintWriter implements AutoCloseable {
             return;
         }
         byte[] bytes = str.getBytes(StandardCharsets.UTF_8);
+        if (log.isDebugEnabled()) {
+            log.debug("value: " + LogUtil.format(bytes));
+        }
         append(bytes.length);
         try {
             out.write(bytes);
@@ -33,10 +43,12 @@ class FingerprintWriter implements AutoCloseable {
     }
 
     private void append(boolean b) {
+        log.debug("value: " + LogUtil.format(b));
         out.write((byte) (b ? 1 : 0));
     }
 
     private void append(long l) {
+        log.debug("value: " + LogUtil.format(l));
         int len;
         if (l < 0xfc) {
             len = 1;
@@ -57,6 +69,9 @@ class FingerprintWriter implements AutoCloseable {
     }
 
     private void append(byte[] bytes) {
+        if (log.isDebugEnabled()) {
+            log.debug("value: " + LogUtil.format(bytes));
+        }
         append(bytes.length);
         try {
             out.write(bytes);
@@ -66,6 +81,7 @@ class FingerprintWriter implements AutoCloseable {
     }
 
     private void appendFingerprint(Fingerprint obj) {
+        log.debug("Fingerprinting {} (ver {})", obj.getClass().getName(), obj.getVersion());
         append(obj.getVersion());
         try {
             for (Field field : obj.getClass().getDeclaredFields()) {
@@ -74,6 +90,7 @@ class FingerprintWriter implements AutoCloseable {
                 }
                 Since since = field.getAnnotation(Since.class);
                 if (since == null || since.value() <= obj.getVersion()) {
+                    log.debug("field: " + field.getName());
                     append(field.get(obj));
                 }
             }
