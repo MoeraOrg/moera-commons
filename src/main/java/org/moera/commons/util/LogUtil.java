@@ -1,5 +1,6 @@
 package org.moera.commons.util;
 
+import java.sql.Timestamp;
 import java.util.UUID;
 
 public class LogUtil {
@@ -39,6 +40,10 @@ public class LogUtil {
 
     public static String format(byte[] value) {
         return value != null ? Util.dump(value) : "null";
+    }
+
+    public static String format(Timestamp value) {
+        return formatTimestamp(Util.toEpochSecond(value));
     }
 
     public static String formatTimestamp(Long value) {
