@@ -93,9 +93,33 @@ public class Util {
             if (buf.length() > 0) {
                 buf.append(' ');
             }
-            buf.append(String.format("%02X", b >= 0 ? b : 256 + (int) b));
+            buf.append(hexByte(b));
         }
         return buf.toString();
+    }
+
+    public static String dumpShort(byte[] bytes) {
+        if (bytes.length <= 16) {
+            return dump(bytes);
+        }
+
+        StringBuilder buf = new StringBuilder();
+        for (int i = 0; i < 8; i++) {
+            if (buf.length() > 0) {
+                buf.append(' ');
+            }
+            buf.append(hexByte(bytes[i]));
+        }
+        buf.append(" ...");
+        for (int i = bytes.length - 8; i < bytes.length; i++) {
+            buf.append(' ');
+            buf.append(hexByte(bytes[i]));
+        }
+        return buf.toString();
+    }
+
+    public static String hexByte(byte b) {
+        return String.format("%02X", b >= 0 ? b : 256 + (int) b);
     }
 
     public static boolean equals(byte[] array1, int offset1, byte[] array2, int offset2, int length) {

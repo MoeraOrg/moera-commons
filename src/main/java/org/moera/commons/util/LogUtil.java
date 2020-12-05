@@ -39,7 +39,7 @@ public class LogUtil {
     }
 
     public static String format(byte[] value) {
-        return value != null ? Util.dump(value) : "null";
+        return value != null ? Util.dumpShort(value) : "null";
     }
 
     public static String format(Timestamp value) {
