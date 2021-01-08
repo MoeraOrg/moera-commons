@@ -22,11 +22,13 @@ public interface NamingService {
 
     RegisteredNameInfo getCurrent(@JsonRpcParam("name") String name, @JsonRpcParam("generation") int generation);
 
+    @Deprecated
     RegisteredNameInfo getCurrentForLatest(@JsonRpcParam("name") String name);
 
     RegisteredNameInfo getPast(@JsonRpcParam("name") String name, @JsonRpcParam("generation") int generation,
                                @JsonRpcParam("at") long at);
 
+    @Deprecated
     RegisteredNameInfo getPastForLatest(@JsonRpcParam("name") String name, @JsonRpcParam("at") long at);
 
     @Deprecated
