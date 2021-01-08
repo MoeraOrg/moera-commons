@@ -11,7 +11,6 @@ public class Rules {
     public static final int PRIVATE_KEY_LENGTH = 32;
     public static final int PUBLIC_KEY_LENGTH = 64;
     public static final int NODE_URI_MAX_LENGTH = 255;
-    public static final Duration REGISTRATION_DURATION = Duration.ofDays(365);
     public static final Duration VALID_FROM_IN_PAST = Duration.ofDays(7);
     public static final String DIGEST_ALGORITHM = "SHA3-256";
     public static final int DIGEST_LENGTH = 32;
