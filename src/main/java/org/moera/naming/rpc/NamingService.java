@@ -1,5 +1,6 @@
 package org.moera.naming.rpc;
 
+import java.util.List;
 import java.util.UUID;
 
 import com.googlecode.jsonrpc4j.JsonRpcParam;
@@ -35,5 +36,10 @@ public interface NamingService {
     boolean isFree(@JsonRpcParam("name") String name);
 
     boolean isFree(@JsonRpcParam("name") String name, @JsonRpcParam("generation") int generation);
+
+    RegisteredNameInfo getSimilar(@JsonRpcParam("name") String name);
+
+    List<RegisteredNameInfo> getAll(@JsonRpcParam("at") long at, @JsonRpcParam("page") int page,
+                                    @JsonRpcParam("size") int size);
 
 }

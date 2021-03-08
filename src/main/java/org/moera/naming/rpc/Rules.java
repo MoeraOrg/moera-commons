@@ -16,6 +16,7 @@ public class Rules {
     public static final int DIGEST_LENGTH = 32;
     public static final String SIGNATURE_ALGORITHM = "SHA3-256withECDSA";
     public static final int SIGNATURE_MAX_LENGTH = 72; // FIXME must be exact value
+    public static final int PAGE_MAX_SIZE = 100;
 
     private static final Pattern LATIN_CHARS = Pattern.compile("^[A-Za-z]+$");
 
