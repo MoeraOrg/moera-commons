@@ -137,7 +137,7 @@ public class FingerprintReader implements AutoCloseable {
         } else if (Fingerprint.class.isAssignableFrom(type)) {
             return read(v -> {
                 try {
-                    return (Fingerprint) type.newInstance();
+                    return (Fingerprint) type.getDeclaredConstructor().newInstance();
                 } catch (Exception e) {
                     throw new FingerprintException(type, "cannot instantiate", e);
                 }
