@@ -6,6 +6,7 @@ import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
 import java.net.InetAddress;
 import java.nio.charset.StandardCharsets;
+import java.util.List;
 
 import org.moera.commons.util.LogUtil;
 import org.slf4j.Logger;
@@ -69,15 +70,24 @@ class FingerprintWriter implements AutoCloseable {
     }
 
     private void append(byte[] bytes) {
+        append(bytes.length);
         if (log.isDebugEnabled()) {
             log.debug("value: " + LogUtil.format(bytes));
         }
-        append(bytes.length);
         try {
             out.write(bytes);
         } catch (IOException e) {
             throw new CryptoException(e);
         }
+    }
+
+    private void append(List<?> objects) {
+        if (log.isDebugEnabled()) {
+            log.debug("list: " + LogUtil.format(objects.size()));
+        }
+        FingerprintWriter writer = new FingerprintWriter();
+        objects.forEach(writer::append);
+        append(writer.toBytes());
     }
 
     private void appendFingerprint(Fingerprint obj) {
@@ -122,6 +132,8 @@ class FingerprintWriter implements AutoCloseable {
             append(((InetAddress) obj).getAddress());
         } else if (obj instanceof Digest) {
             append(((Digest<?>) obj).getDigest());
+        } else if (obj instanceof List) {
+            append((List<?>) obj);
         } else if (obj instanceof Fingerprint) {
             appendFingerprint((Fingerprint) obj);
         } else {
