@@ -106,6 +106,8 @@ class FingerprintWriter implements AutoCloseable {
             }
         } catch (IllegalAccessException e) {
             throw new FingerprintException(obj.getClass(), "cannot read field", e);
+        } finally {
+            log.debug("End of fingerprint {}", obj.getClass().getName());
         }
     }
 
