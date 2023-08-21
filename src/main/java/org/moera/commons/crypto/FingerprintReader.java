@@ -11,7 +11,7 @@ import java.util.function.Function;
 
 public class FingerprintReader implements AutoCloseable {
 
-    private ByteArrayInputStream in;
+    private final ByteArrayInputStream in;
 
     FingerprintReader(byte[] input) {
         in = new ByteArrayInputStream(input);
@@ -47,7 +47,7 @@ public class FingerprintReader implements AutoCloseable {
         long value = 0;
         int shift = 0;
         for (int i = 0; i < len; i++) {
-            value |= in.read() << shift;
+            value |= (long) in.read() << shift;
             shift += 8;
         }
         return value;

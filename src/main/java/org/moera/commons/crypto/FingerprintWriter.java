@@ -14,9 +14,9 @@ import org.slf4j.LoggerFactory;
 
 class FingerprintWriter implements AutoCloseable {
 
-    private static Logger log = LoggerFactory.getLogger(FingerprintWriter.class);
+    private static final Logger log = LoggerFactory.getLogger(FingerprintWriter.class);
 
-    private ByteArrayOutputStream out = new ByteArrayOutputStream();
+    private final ByteArrayOutputStream out = new ByteArrayOutputStream();
 
     FingerprintWriter() {
     }
@@ -85,9 +85,10 @@ class FingerprintWriter implements AutoCloseable {
         if (log.isDebugEnabled()) {
             log.debug("list: " + LogUtil.format(objects.size()));
         }
-        FingerprintWriter writer = new FingerprintWriter();
-        objects.forEach(writer::append);
-        append(writer.toBytes());
+        try (FingerprintWriter writer = new FingerprintWriter()) {
+            objects.forEach(writer::append);
+            append(writer.toBytes());
+        }
     }
 
     private void appendFingerprint(Fingerprint obj) {

@@ -29,7 +29,7 @@ public class Util {
     public static String dump(byte[] bytes) {
         StringBuilder buf = new StringBuilder();
         for (byte b : bytes) {
-            if (buf.length() > 0) {
+            if (!buf.isEmpty()) {
                 buf.append(' ');
             }
             buf.append(hexByte(b));
@@ -44,7 +44,7 @@ public class Util {
 
         StringBuilder buf = new StringBuilder();
         for (int i = 0; i < 8; i++) {
-            if (buf.length() > 0) {
+            if (!buf.isEmpty()) {
                 buf.append(' ');
             }
             buf.append(hexByte(bytes[i]));

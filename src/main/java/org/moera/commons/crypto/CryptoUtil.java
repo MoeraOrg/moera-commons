@@ -35,7 +35,7 @@ import org.slf4j.LoggerFactory;
 
 public class CryptoUtil {
 
-    private static Logger log = LoggerFactory.getLogger(CryptoUtil.class);
+    private static final Logger log = LoggerFactory.getLogger(CryptoUtil.class);
 
     private static byte[] encodeUnsigned(BigInteger v, int len) {
         byte[] r = v.toByteArray();
@@ -61,7 +61,7 @@ public class CryptoUtil {
         return rawKey;
     }
 
-    public static byte[] toUncompressedPublicKey(ECPublicKey publicKey) {
+public static byte[] toUncompressedPublicKey(ECPublicKey publicKey) {
         byte[] raw = toRawPublicKey(publicKey);
         byte[] uncompressed = new byte[raw.length + 1];
         uncompressed[0] = 0x04;

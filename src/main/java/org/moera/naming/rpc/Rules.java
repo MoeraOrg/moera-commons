@@ -36,25 +36,20 @@ public class Rules {
     }
 
     public static boolean isNameCharacterValid(char c) {
-        switch (Character.getType(c)) {
-            case Character.UPPERCASE_LETTER:
-            case Character.LOWERCASE_LETTER:
-            case Character.TITLECASE_LETTER:
-            case Character.OTHER_LETTER:
-            case Character.DECIMAL_DIGIT_NUMBER:
-            case Character.LETTER_NUMBER:
-            case Character.OTHER_NUMBER:
-            case Character.CURRENCY_SYMBOL:
-            case Character.OTHER_SYMBOL:
-                return true;
-
-            case Character.OTHER_PUNCTUATION:
-            case Character.DASH_PUNCTUATION:
-                return NAME_PUNCTUATION_ALLOWED.indexOf(c) >= 0;
-
-            default:
-                return false;
-        }
+        return switch (Character.getType(c)) {
+            case Character.UPPERCASE_LETTER,
+                    Character.LOWERCASE_LETTER,
+                    Character.TITLECASE_LETTER,
+                    Character.OTHER_LETTER,
+                    Character.DECIMAL_DIGIT_NUMBER,
+                    Character.LETTER_NUMBER,
+                    Character.OTHER_NUMBER,
+                    Character.CURRENCY_SYMBOL,
+                    Character.OTHER_SYMBOL -> true;
+            case Character.OTHER_PUNCTUATION,
+                    Character.DASH_PUNCTUATION -> NAME_PUNCTUATION_ALLOWED.indexOf(c) >= 0;
+            default -> false;
+        };
     }
 
 }

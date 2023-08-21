@@ -2,7 +2,7 @@ package org.moera.commons.crypto;
 
 public class Fingerprint {
 
-    private int version;
+    private final int version;
 
     public Fingerprint(int version) {
         this.version = version;

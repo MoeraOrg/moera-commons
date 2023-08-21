@@ -35,7 +35,7 @@ public class LogUtil {
     }
 
     public static String format(UUID value) {
-        return value != null ? String.format("'%s'", value.toString()) : "null";
+        return value != null ? String.format("'%s'", value) : "null";
     }
 
     public static String format(byte[] value) {
