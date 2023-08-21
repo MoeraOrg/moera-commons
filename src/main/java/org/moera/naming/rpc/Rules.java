@@ -6,7 +6,7 @@ import java.util.regex.Pattern;
 public class Rules {
 
     public static final int NAME_MAX_LENGTH = 127;
-    public static final String NAME_PUNCTUATION_ALLOWED ="!%&*-.?";
+    public static final String NAME_PUNCTUATION_ALLOWED ="!*-.";
     public static final String EC_CURVE = "secp256k1";
     public static final int PRIVATE_KEY_LENGTH = 32;
     public static final int PUBLIC_KEY_LENGTH = 64;
@@ -47,9 +47,6 @@ public class Rules {
             case Character.CURRENCY_SYMBOL:
             case Character.OTHER_SYMBOL:
                 return true;
-
-            case Character.MATH_SYMBOL:
-                return c != '~';
 
             case Character.OTHER_PUNCTUATION:
             case Character.DASH_PUNCTUATION:
