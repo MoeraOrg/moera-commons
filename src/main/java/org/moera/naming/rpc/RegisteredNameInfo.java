@@ -7,12 +7,8 @@ public class RegisteredNameInfo {
 
     private String name;
     private int generation;
-    @Deprecated
-    private boolean latest;
     private byte[] updatingKey;
     private String nodeUri;
-    @Deprecated
-    private long deadline;
     private byte[] signingKey;
     private Long validFrom;
     private byte[] digest;
@@ -33,16 +29,6 @@ public class RegisteredNameInfo {
         this.generation = generation;
     }
 
-    @Deprecated
-    public boolean isLatest() {
-        return latest;
-    }
-
-    @Deprecated
-    public void setLatest(boolean latest) {
-        this.latest = latest;
-    }
-
     public byte[] getUpdatingKey() {
         return updatingKey;
     }
@@ -57,16 +43,6 @@ public class RegisteredNameInfo {
 
     public void setNodeUri(String nodeUri) {
         this.nodeUri = nodeUri;
-    }
-
-    @Deprecated
-    public long getDeadline() {
-        return deadline;
-    }
-
-    @Deprecated
-    public void setDeadline(long deadline) {
-        this.deadline = deadline;
     }
 
     public byte[] getSigningKey() {
