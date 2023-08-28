@@ -9,6 +9,7 @@ public class RegisteredNameInfo {
     private int generation;
     private byte[] updatingKey;
     private String nodeUri;
+    private long created;
     private byte[] signingKey;
     private Long validFrom;
     private byte[] digest;
@@ -43,6 +44,14 @@ public class RegisteredNameInfo {
 
     public void setNodeUri(String nodeUri) {
         this.nodeUri = nodeUri;
+    }
+
+    public long getCreated() {
+        return created;
+    }
+
+    public void setCreated(long created) {
+        this.created = created;
     }
 
     public byte[] getSigningKey() {

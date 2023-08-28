@@ -1,17 +1,17 @@
 package org.moera.naming.rpc;
 
-import java.sql.Timestamp;
 import java.util.UUID;
 
 public class OperationStatusInfo {
 
     private UUID operationId;
+    private String name;
+    private int generation;
     private OperationStatus status;
-    private Timestamp added;
-    private Timestamp completed;
+    private Long added;
+    private Long completed;
     private String errorCode;
     private String errorMessage;
-    private int generation;
 
     public UUID getOperationId() {
         return operationId;
@@ -19,6 +19,22 @@ public class OperationStatusInfo {
 
     public void setOperationId(UUID operationId) {
         this.operationId = operationId;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public int getGeneration() {
+        return generation;
+    }
+
+    public void setGeneration(int generation) {
+        this.generation = generation;
     }
 
     public OperationStatus getStatus() {
@@ -29,19 +45,19 @@ public class OperationStatusInfo {
         this.status = status;
     }
 
-    public Timestamp getAdded() {
+    public Long getAdded() {
         return added;
     }
 
-    public void setAdded(Timestamp added) {
+    public void setAdded(Long added) {
         this.added = added;
     }
 
-    public Timestamp getCompleted() {
+    public Long getCompleted() {
         return completed;
     }
 
-    public void setCompleted(Timestamp completed) {
+    public void setCompleted(Long completed) {
         this.completed = completed;
     }
 
@@ -59,14 +75,6 @@ public class OperationStatusInfo {
 
     public void setErrorMessage(String errorMessage) {
         this.errorMessage = errorMessage;
-    }
-
-    public int getGeneration() {
-        return generation;
-    }
-
-    public void setGeneration(int generation) {
-        this.generation = generation;
     }
 
 }
