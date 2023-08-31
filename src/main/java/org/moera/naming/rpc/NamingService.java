@@ -28,9 +28,14 @@ public interface NamingService {
 
     boolean isFree(@JsonRpcParam("name") String name, @JsonRpcParam("generation") int generation);
 
+    List<SigningKeyInfo> getAllKeys(@JsonRpcParam("name") String name, @JsonRpcParam("generation") int generation);
+
     RegisteredNameInfo getSimilar(@JsonRpcParam("name") String name);
 
     List<RegisteredNameInfo> getAll(@JsonRpcParam("at") long at, @JsonRpcParam("page") int page,
                                     @JsonRpcParam("size") int size);
+
+    List<RegisteredNameInfo> getAllNewer(@JsonRpcParam("at") long at, @JsonRpcParam("page") int page,
+                                         @JsonRpcParam("size") int size);
 
 }
