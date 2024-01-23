@@ -10,4 +10,8 @@ public interface NodeName {
         return RegisteredName.shorten(name);
     }
 
+    static String expand(String name) {
+        return RegisteredName.expand(name);
+    }
+
 }
