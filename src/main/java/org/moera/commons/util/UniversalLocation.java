@@ -171,7 +171,7 @@ public class UniversalLocation {
         }
         buf.append('/');
         if (authority != null) {
-            if (scheme != null) {
+            if (scheme != null && !scheme.equalsIgnoreCase("https")) {
                 buf.append(scheme).append(':');
             }
             buf.append(authority);
