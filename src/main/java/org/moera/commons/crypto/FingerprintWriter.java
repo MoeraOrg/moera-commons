@@ -22,7 +22,7 @@ class FingerprintWriter implements AutoCloseable {
     }
 
     private void appendNull() {
-        log.debug("value: null");
+        log.trace("value: null");
         out.write((byte) 0xff);
     }
 
@@ -32,8 +32,8 @@ class FingerprintWriter implements AutoCloseable {
             return;
         }
         byte[] bytes = str.getBytes(StandardCharsets.UTF_8);
-        if (log.isDebugEnabled()) {
-            log.debug("value: " + LogUtil.format(bytes));
+        if (log.isTraceEnabled()) {
+            log.trace("value: {}", LogUtil.format(bytes));
         }
         append(bytes.length);
         try {
@@ -44,12 +44,12 @@ class FingerprintWriter implements AutoCloseable {
     }
 
     private void append(boolean b) {
-        log.debug("value: " + LogUtil.format(b));
+        log.trace("value: {}", LogUtil.format(b));
         out.write((byte) (b ? 1 : 0));
     }
 
     private void append(long l) {
-        log.debug("value: " + LogUtil.format(l));
+        log.trace("value: {}", LogUtil.format(l));
         int len;
         if (l < 0xfc) {
             len = 1;
@@ -71,8 +71,8 @@ class FingerprintWriter implements AutoCloseable {
 
     private void append(byte[] bytes) {
         append(bytes.length);
-        if (log.isDebugEnabled()) {
-            log.debug("value: " + LogUtil.format(bytes));
+        if (log.isTraceEnabled()) {
+            log.trace("value: {}", LogUtil.format(bytes));
         }
         try {
             out.write(bytes);
@@ -82,8 +82,8 @@ class FingerprintWriter implements AutoCloseable {
     }
 
     private void append(List<?> objects) {
-        if (log.isDebugEnabled()) {
-            log.debug("list: " + LogUtil.format(objects.size()));
+        if (log.isTraceEnabled()) {
+            log.trace("list: {}", LogUtil.format(objects.size()));
         }
         try (FingerprintWriter writer = new FingerprintWriter()) {
             objects.forEach(writer::append);
@@ -92,7 +92,7 @@ class FingerprintWriter implements AutoCloseable {
     }
 
     private void appendFingerprint(Fingerprint obj) {
-        log.debug("Fingerprinting {} (ver {})", obj.getClass().getName(), obj.getVersion());
+        log.trace("Fingerprinting {} (ver {})", obj.getClass().getName(), obj.getVersion());
         append(obj.getVersion());
         try {
             for (Field field : obj.getClass().getDeclaredFields()) {
@@ -101,14 +101,14 @@ class FingerprintWriter implements AutoCloseable {
                 }
                 Since since = field.getAnnotation(Since.class);
                 if (since == null || since.value() <= obj.getVersion()) {
-                    log.debug("field: " + field.getName());
+                    log.trace("field: {}", field.getName());
                     append(field.get(obj));
                 }
             }
         } catch (IllegalAccessException e) {
             throw new FingerprintException(obj.getClass(), "cannot read field", e);
         } finally {
-            log.debug("End of fingerprint {}", obj.getClass().getName());
+            log.trace("End of fingerprint {}", obj.getClass().getName());
         }
     }
 
