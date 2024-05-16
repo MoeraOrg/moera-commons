@@ -26,6 +26,10 @@ public class Util {
         return Base64.getDecoder().decode(s);
     }
 
+    public static String base64urlencode(byte[] bytes) {
+        return bytes != null ? Base64.getUrlEncoder().withoutPadding().encodeToString(bytes) : null;
+    }
+
     public static String dump(byte[] bytes) {
         StringBuilder buf = new StringBuilder();
         for (byte b : bytes) {

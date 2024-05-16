@@ -111,7 +111,7 @@ public static byte[] toUncompressedPublicKey(ECPublicKey publicKey) {
         byte[] random = new byte[32];
         try {
             new SecureRandom().nextBytes(random);
-            return Util.base64encode(MessageDigest.getInstance("SHA-256", "BC").digest(random));
+            return Util.base64urlencode(MessageDigest.getInstance("SHA-256", "BC").digest(random));
         } catch (NoSuchAlgorithmException | NoSuchProviderException e) {
             throw new CryptoException(e);
         }

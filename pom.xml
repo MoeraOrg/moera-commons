@@ -5,7 +5,7 @@
 
     <groupId>org.moera</groupId>
     <artifactId>moera-commons</artifactId>
-    <version>0.10.1</version>
+    <version>0.10.2-SNAPSHOT</version>
     <name>moera-commons</name>
     <description>Moera common classes</description>
 
